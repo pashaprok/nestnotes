@@ -24,4 +24,17 @@ export class UsersService {
       include: { all: true },
     });
   }
+
+  async getUserById(id: string) {
+    return await this.userRepository.findOne({
+      where: { id },
+      include: { all: true },
+    });
+  }
+
+  async deleteUser(id: string) {
+    return await this.userRepository.destroy({
+      where: { id },
+    });
+  }
 }
