@@ -4,13 +4,12 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-// import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { User } from '../users/users.model';
 import { CreateUserDto } from '../users/dto/create-user-dto';
 import { UsersService } from '../users/users.service';
-// import { InjectModel } from '@nestjs/sequelize';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { LoginUserDto } from './dto/login-user-dto';
 
 @Injectable()
 export class AuthService {
@@ -19,7 +18,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async login(userDto: CreateUserDto) {
+  async login(userDto: LoginUserDto) {
     const user = await this.validateUser(userDto);
     return this.generateToken(user);
   }
@@ -52,7 +51,7 @@ export class AuthService {
     };
   }
 
-  private async validateUser(userDto: CreateUserDto) {
+  private async validateUser(userDto: LoginUserDto) {
     const userCheck = await this.usersService.getUserByEmail(userDto.email);
     if (!userCheck) {
       throw new UnauthorizedException({
