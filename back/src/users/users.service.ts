@@ -25,14 +25,14 @@ export class UsersService {
     });
   }
 
-  async getUserById(id: string) {
+  async getUserById(id: number) {
     return await this.userRepository.findOne({
       where: { id },
       include: { all: true },
     });
   }
 
-  async deleteUser(id: string) {
+  async deleteUser(id: number) {
     return await this.userRepository.destroy({
       where: { id },
     });

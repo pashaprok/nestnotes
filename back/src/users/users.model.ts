@@ -1,5 +1,6 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
 import { ApiProperty } from '@nestjs/swagger';
+import { Note } from '../notes/notes.model';
 
 interface UserCreationAttr {
   email: string;
@@ -39,4 +40,7 @@ export class User extends Model<User, UserCreationAttr> {
     allowNull: false,
   })
   name: string;
+
+  @HasMany(() => Note)
+  notes: Note[];
 }
