@@ -3,6 +3,8 @@ import { CreateNoteDto } from './dto/create-note-dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Note } from './notes.model';
 import { UpdateNoteDto } from './dto/update-note-dto';
+import { isAuthor } from '../utils/checkRights';
+import { ACTIONS } from '../constants/actions';
 
 @Injectable()
 export class NotesService {
@@ -23,6 +25,7 @@ export class NotesService {
     });
   }
 
+  // !!!WARNING!!! ONLY IF THIS NEED
   // async deleteAllNotes() {
   //   return await this.noteRepository.destroy({
   //     where: {},
@@ -35,12 +38,8 @@ export class NotesService {
     if (!note) {
       throw new HttpException('This note is not exist!', HttpStatus.NOT_FOUND);
     }
-    if (note.userId !== currentUserId) {
-      throw new HttpException(
-        'Only author can update note!',
-        HttpStatus.FORBIDDEN,
-      );
-    }
+
+    isAuthor(note.userId, currentUserId, ACTIONS.UPDATE, 'note');
 
     await this.noteRepository.update(
       { ...dto, updatedAt: new Date() },
@@ -54,11 +53,8 @@ export class NotesService {
     const note = await this.getSingleNote(noteId);
     if (!note)
       throw new HttpException('This note is not exist!', HttpStatus.NOT_FOUND);
-    if (note.userId !== currentUserId)
-      throw new HttpException(
-        'Only author can delete note!',
-        HttpStatus.FORBIDDEN,
-      );
+
+    isAuthor(note.userId, currentUserId, ACTIONS.DELETE, 'note');
 
     return await this.noteRepository.destroy({
       where: { id: noteId },

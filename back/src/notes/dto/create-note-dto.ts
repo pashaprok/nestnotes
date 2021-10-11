@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 
 export class CreateNoteDto {
   @ApiProperty({ example: 'Note Title', description: 'title fot note' })
@@ -12,9 +12,4 @@ export class CreateNoteDto {
   })
   @IsNotEmpty({ message: 'Can not be empty!' })
   readonly content: string;
-
-  @ApiProperty({ example: '1', description: 'author id' })
-  @IsNotEmpty({ message: 'Can not be empty!' })
-  @IsNumber({}, { message: 'Must be number!' })
-  readonly userId: number;
 }
