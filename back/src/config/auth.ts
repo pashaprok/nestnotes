@@ -1,9 +1,12 @@
+import { config } from 'dotenv';
+config({ path: `.${process.env.NODE_ENV}.env` });
+
 export const authConfig = {
   jwt: {
-    expire: '1h',
-    secret: process.env.SECRET_JWT || 'SUPERSECRETKEY',
+    expire: process.env.JWT_EXPIRE || '1h',
+    secret: process.env.JWT_SECRET || 'SUPERSECRETKEY',
   },
   bcrypt: {
-    saltRounds: 12,
+    saltRounds: +process.env.JWT_SALT || 12,
   },
 };

@@ -6,7 +6,6 @@ import { ValidationPipe } from './pipes/validation.pipe';
 import { appConfig } from './config/app';
 
 async function start() {
-  const PORT: number = +process.env.PORT || 5000;
   const app: INestApplication = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
@@ -21,7 +20,7 @@ async function start() {
 
   app.useGlobalPipes(new ValidationPipe());
 
-  await app.listen(PORT, () =>
+  await app.listen(appConfig.PORT, () =>
     console.log(`App started on port: ${appConfig.PORT}`),
   );
 }

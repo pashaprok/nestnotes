@@ -8,6 +8,7 @@ import { User } from './users/users.model';
 import { AuthModule } from './auth/auth.module';
 import { NotesModule } from './notes/notes.module';
 import { Note } from './notes/notes.model';
+import { postgresConfig } from './config/postgres';
 
 @Module({
   imports: [
@@ -16,11 +17,11 @@ import { Note } from './notes/notes.model';
     }),
     SequelizeModule.forRoot({
       dialect: 'postgres',
-      host: process.env.POSTGRES_HOST,
-      port: +process.env.POSTGRES_PORT,
-      username: process.env.POSTGRES_USER,
-      password: process.env.POSTGRES_PASSWORD,
-      database: process.env.POSTGRES_DB,
+      host: postgresConfig.host,
+      port: postgresConfig.port,
+      username: postgresConfig.username,
+      password: postgresConfig.password,
+      database: postgresConfig.database,
       models: [User, Note],
       autoLoadModels: true,
     }),
