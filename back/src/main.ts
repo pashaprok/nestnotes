@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import { INestApplication } from '@nestjs/common';
 import { ValidationPipe } from './pipes/validation.pipe';
+import { appConfig } from './config/app';
 
 async function start() {
   const PORT: number = +process.env.PORT || 5000;
@@ -20,6 +21,8 @@ async function start() {
 
   app.useGlobalPipes(new ValidationPipe());
 
-  await app.listen(PORT, () => console.log(`App started on port: ${PORT}`));
+  await app.listen(PORT, () =>
+    console.log(`App started on port: ${appConfig.PORT}`),
+  );
 }
 start();

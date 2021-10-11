@@ -4,6 +4,7 @@ import { AuthController } from './auth.controller';
 import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { NotesModule } from '../notes/notes.module';
+import { authConfig } from '../config/auth';
 
 @Module({
   providers: [AuthService],
@@ -12,9 +13,9 @@ import { NotesModule } from '../notes/notes.module';
     forwardRef(() => UsersModule),
     forwardRef(() => NotesModule),
     JwtModule.register({
-      secret: process.env.SECRET_JWT || 'SUPERSECRETKEY',
+      secret: authConfig.jwt.secret,
       signOptions: {
-        expiresIn: '1h',
+        expiresIn: authConfig.jwt.expire,
       },
     }),
   ],

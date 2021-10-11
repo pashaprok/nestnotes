@@ -10,6 +10,7 @@ import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/login-user-dto';
+import { authConfig } from '../config/auth';
 
 @Injectable()
 export class AuthService {
@@ -31,7 +32,10 @@ export class AuthService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    const hashPassword = await bcrypt.hash(userDto.password, 12);
+    const hashPassword = await bcrypt.hash(
+      userDto.password,
+      authConfig.bcrypt.saltRounds,
+    );
     const user = await this.usersService.createUser({
       ...userDto,
       password: hashPassword,
