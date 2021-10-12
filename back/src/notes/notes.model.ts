@@ -13,6 +13,7 @@ interface NoteCreationAttr {
   title: string;
   content: string;
   userId: number;
+  image: string;
 }
 
 @Table({ tableName: 'notes' })
@@ -29,7 +30,6 @@ export class Note extends Model<Note, NoteCreationAttr> {
   @ApiProperty({ example: 'Note Title', description: 'title for note' })
   @Column({
     type: DataType.STRING,
-    unique: true,
     allowNull: false,
   })
   title: string;
@@ -41,11 +41,11 @@ export class Note extends Model<Note, NoteCreationAttr> {
   })
   content: string;
 
-  // @ApiProperty({ example: 'Image', description: 'image for note' })
-  // @Column({
-  //   type: DataType.STRING,
-  // })
-  // image: string;
+  @ApiProperty({ example: 'Image', description: 'image for note' })
+  @Column({
+    type: DataType.STRING,
+  })
+  image: string;
 
   @ApiProperty({
     example: 1,

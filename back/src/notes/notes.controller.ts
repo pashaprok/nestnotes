@@ -8,6 +8,8 @@ import {
   Post,
   Req,
   UseGuards,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { NotesService } from './notes.service';
@@ -21,6 +23,7 @@ import {
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Note } from './notes.model';
 import { UpdateNoteDto } from './dto/update-note-dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Notes')
 @Controller('notes')
@@ -32,8 +35,13 @@ export class NotesController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Post()
-  createNote(@Body() dto: CreateNoteDto, @Req() request: Request) {
-    return this.notesService.createNote(dto, request.user.id);
+  @UseInterceptors(FileInterceptor('image'))
+  createNote(
+    @Body() dto: CreateNoteDto,
+    @Req() request: Request,
+    @UploadedFile() image: Express.Multer.File,
+  ) {
+    return this.notesService.createNote(dto, request.user.id, image);
   }
 
   @ApiOperation({ summary: 'Get single note' })

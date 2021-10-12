@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { NotesModule } from './notes/notes.module';
 import { Note } from './notes/notes.model';
 import { postgresConfig } from './config/postgres';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { postgresConfig } from './config/postgres';
     UsersModule,
     AuthModule,
     NotesModule,
+    FilesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

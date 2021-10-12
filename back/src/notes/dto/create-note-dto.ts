@@ -12,4 +12,10 @@ export class CreateNoteDto {
   })
   @IsNotEmpty({ message: 'Can not be empty!' })
   readonly content: string;
+
+  @ApiProperty({
+    example: 'Image',
+    description: 'image for note',
+  })
+  readonly image: string;
 }

@@ -5,13 +5,28 @@ import { Note } from './notes.model';
 import { UpdateNoteDto } from './dto/update-note-dto';
 import { isAuthor } from '../utils/checkRights';
 import { ACTIONS } from '../constants/actions';
+import { FilesService } from '../files/files.service';
+import { imageFileFilter } from '../utils/imageFilter';
 
 @Injectable()
 export class NotesService {
-  constructor(@InjectModel(Note) private noteRepository: typeof Note) {}
+  constructor(
+    @InjectModel(Note) private noteRepository: typeof Note,
+    private fileService: FilesService,
+  ) {}
 
-  async createNote(dto: CreateNoteDto, userId: number) {
-    return await this.noteRepository.create({ ...dto, userId });
+  async createNote(
+    dto: CreateNoteDto,
+    userId: number,
+    image: Express.Multer.File,
+  ) {
+    imageFileFilter(image.originalname);
+    const fileName: string = await this.fileService.createFile(image);
+    return await this.noteRepository.create({
+      ...dto,
+      image: fileName,
+      userId,
+    });
   }
 
   async getAllNotes() {
