@@ -12,7 +12,9 @@ interface ValidationErrorI {
 export class ValidationPipe implements PipeTransform {
   async transform(value: any, metadata: ArgumentMetadata): Promise<any> {
     const validationObject = plainToClass(metadata.metatype, value);
-    const errors: ValidationError[] = await validate(validationObject);
+    const errors: ValidationError[] = await validate(validationObject, {
+      whitelist: true,
+    });
 
     if (errors.length) {
       const validationErrors: ValidationErrorI[] = errors.map(
