@@ -5,6 +5,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from './users.model';
 import { AuthModule } from '../auth/auth.module';
 import { Note } from '../notes/notes.model';
+import { NotesModule } from '../notes/notes.module';
 
 @Module({
   providers: [UsersService],
@@ -12,6 +13,7 @@ import { Note } from '../notes/notes.model';
   imports: [
     SequelizeModule.forFeature([User, Note]),
     forwardRef(() => AuthModule),
+    NotesModule,
   ],
   exports: [UsersService],
 })

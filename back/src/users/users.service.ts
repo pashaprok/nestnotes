@@ -2,10 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { User } from './users.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateUserDto } from './dto/create-user-dto';
+import { NotesService } from '../notes/notes.service';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User) private userRepository: typeof User) {}
+  constructor(
+    @InjectModel(User) private userRepository: typeof User,
+    private notesService: NotesService,
+  ) {}
 
   async createUser(dto: CreateUserDto) {
     if (!dto.name) {
@@ -21,7 +25,6 @@ export class UsersService {
   async getUserByEmail(email: string) {
     return await this.userRepository.findOne({
       where: { email },
-      include: { all: true },
     });
   }
 
@@ -36,5 +39,9 @@ export class UsersService {
     return await this.userRepository.destroy({
       where: { id },
     });
+  }
+
+  async getNotesByUser(id: number) {
+    return await this.notesService.getNotesByUser(id);
   }
 }

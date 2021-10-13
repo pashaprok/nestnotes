@@ -24,6 +24,11 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Note } from './notes.model';
 import { UpdateNoteDto } from './dto/update-note-dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { imageFileFilter } from '../utils/imageFilter';
+import { diskStorage } from 'multer';
+import { editFileName } from '../utils/editFilename';
+import * as path from 'path';
+import { fileSize } from '../constants/fileSize';
 
 @ApiTags('Notes')
 @Controller('notes')
@@ -35,7 +40,19 @@ export class NotesController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Post()
-  @UseInterceptors(FileInterceptor('image'))
+  @UseInterceptors(
+    FileInterceptor('image', {
+      limits: {
+        files: 1,
+        fileSize: fileSize.image,
+      },
+      storage: diskStorage({
+        filename: editFileName,
+        destination: path.resolve(__dirname, '..', 'static', 'images', 'notes'),
+      }),
+      fileFilter: imageFileFilter,
+    }),
+  )
   createNote(
     @Body() dto: CreateNoteDto,
     @Req() request: Request,
@@ -58,7 +75,19 @@ export class NotesController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Patch('/:id')
-  @UseInterceptors(FileInterceptor('image'))
+  @UseInterceptors(
+    FileInterceptor('image', {
+      limits: {
+        files: 1,
+        fileSize: fileSize.image,
+      },
+      storage: diskStorage({
+        filename: editFileName,
+        destination: path.resolve(__dirname, '..', 'static', 'images', 'notes'),
+      }),
+      fileFilter: imageFileFilter,
+    }),
+  )
   updateNote(
     @Param() params,
     @Req() request: Request,
@@ -86,12 +115,13 @@ export class NotesController {
     return this.notesService.getAllNotes();
   }
 
-  // @ApiOperation({ summary: 'Delete all notes' })
-  // @ApiResponse({ status: 200, type: [Note] })
-  // @ApiBearerAuth()
-  // @UseGuards(JwtAuthGuard)
-  // @Delete()
-  // deleteAllNotes() {
-  //   return this.notesService.deleteAllNotes();
-  // }
+  // !!!WARNING!!! ONLY IF THIS NEED
+  @ApiOperation({ summary: 'Delete all notes' })
+  @ApiResponse({ status: 200, type: [Note] })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Delete()
+  deleteAllNotes() {
+    return this.notesService.deleteAllNotes();
+  }
 }

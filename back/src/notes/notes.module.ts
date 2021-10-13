@@ -15,5 +15,6 @@ import { FilesModule } from '../files/files.module';
     forwardRef(() => AuthModule),
     FilesModule,
   ],
+  exports: [NotesService],
 })
 export class NotesModule {}

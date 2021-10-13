@@ -1,27 +1,15 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as uuid from 'uuid';
 
 @Injectable()
 export class FilesService {
-  async createFile(file): Promise<string> {
+  async createFile(file): Promise<void> {
     try {
-      const fileExtension: string = path.extname(file.originalname);
-      const fileName = `${uuid.v4()}${fileExtension}`;
-      const filePath: string = path.resolve(
-        __dirname,
-        '..',
-        'static',
-        'images',
-        'notes',
-      );
-      if (!fs.existsSync(filePath)) {
-        fs.mkdirSync(filePath, { recursive: true });
-      }
+      const filePath: string = file.destination;
+      if (!fs.existsSync(filePath)) fs.mkdirSync(filePath, { recursive: true });
 
-      fs.writeFileSync(path.join(filePath, fileName), file.buffer);
-      return fileName;
+      fs.writeFileSync(path.join(file.path), file.buffer);
     } catch (e) {
       throw new HttpException(
         'There was an error uploading the image',
@@ -30,21 +18,10 @@ export class FilesService {
     }
   }
 
-  async deleteFile(filename): Promise<string> {
+  async deleteFile(filepath): Promise<void> {
     try {
-      const filePath: string = path.resolve(
-        __dirname,
-        '..',
-        'static',
-        'images',
-        'notes',
-      );
-      if (!fs.existsSync(path.join(filePath, filename))) {
-        return 'File is not exist';
-      }
-
-      fs.unlinkSync(path.join(filePath, filename));
-      return filename;
+      if (!fs.existsSync(filepath)) return;
+      fs.unlinkSync(filepath);
     } catch (e) {
       throw new HttpException(
         'There was an error deleting the image',

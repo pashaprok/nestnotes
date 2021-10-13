@@ -6,7 +6,7 @@ import { UpdateNoteDto } from './dto/update-note-dto';
 import { isAuthor } from '../utils/checkRights';
 import { ACTIONS } from '../constants/actions';
 import { FilesService } from '../files/files.service';
-import { imageFileFilter } from '../utils/imageFilter';
+import * as path from 'path';
 
 @Injectable()
 export class NotesService {
@@ -20,17 +20,21 @@ export class NotesService {
     userId: number,
     image: Express.Multer.File,
   ) {
-    imageFileFilter(image.originalname);
-    const fileName: string = await this.fileService.createFile(image);
     return await this.noteRepository.create({
       ...dto,
-      image: fileName,
+      image: image.filename,
       userId,
     });
   }
 
   async getAllNotes() {
     return await this.noteRepository.findAll();
+  }
+
+  async getNotesByUser(userId: number) {
+    return await this.noteRepository.findAll({
+      where: { userId },
+    });
   }
 
   async getSingleNote(id: number) {
@@ -41,12 +45,11 @@ export class NotesService {
   }
 
   // !!!WARNING!!! ONLY IF THIS NEED
-  // async deleteAllNotes() {
-  //   return await this.noteRepository.destroy({
-  //     where: {},
-  //     truncate: true,
-  //   });
-  // }
+  async deleteAllNotes() {
+    return await this.noteRepository.destroy({
+      truncate: true,
+    });
+  }
 
   async updateNote(
     noteId: number,
@@ -54,28 +57,15 @@ export class NotesService {
     dto: UpdateNoteDto,
     image: Express.Multer.File,
   ) {
-    const note = await this.getSingleNote(noteId);
-    if (!note) {
+    const note: Note = await this.getSingleNote(noteId);
+    if (!note)
       throw new HttpException('This note is not exist!', HttpStatus.NOT_FOUND);
-    }
 
     isAuthor(note.userId, currentUserId, ACTIONS.UPDATE, 'note');
-    imageFileFilter(image.originalname);
-    const newFileName: string = await this.fileService.createFile(image);
-
-    const deletingOldImage: string = await this.fileService.deleteFile(
-      note.image,
-    );
-
-    if (note.image !== deletingOldImage) {
-      throw new HttpException(
-        deletingOldImage,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    await this.fileService.deleteFile(path.join(image.destination, note.image));
 
     await this.noteRepository.update(
-      { ...dto, image: newFileName, updatedAt: new Date() },
+      { ...dto, image: image.filename, updatedAt: new Date() },
       { where: { id: noteId } },
     );
 
@@ -89,16 +79,11 @@ export class NotesService {
 
     isAuthor(note.userId, currentUserId, ACTIONS.DELETE, 'note');
 
-    const deletingNoteImage: string = await this.fileService.deleteFile(
+    const noteImage: string = path.join(
+      path.resolve(__dirname, '..', 'static', 'images', 'notes'),
       note.image,
     );
-
-    if (note.image !== deletingNoteImage) {
-      throw new HttpException(
-        deletingNoteImage,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    await this.fileService.deleteFile(noteImage);
 
     return await this.noteRepository.destroy({
       where: { id: noteId },
