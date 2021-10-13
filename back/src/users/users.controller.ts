@@ -53,4 +53,11 @@ export class UsersController {
   getMyNotes(@Req() request: Request) {
     return this.usersService.getNotesByUser(request.user.id);
   }
+
+  @ApiOperation({ summary: 'Delete my notes' })
+  @ApiResponse({ status: 200 })
+  @Delete('/me/notes')
+  deleteMyNotes(@Req() request: Request) {
+    return this.usersService.deleteNotesByUser(request.user.id);
+  }
 }

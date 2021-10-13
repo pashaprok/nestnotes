@@ -44,4 +44,8 @@ export class UsersService {
   async getNotesByUser(id: number) {
     return await this.notesService.getNotesByUser(id);
   }
+
+  async deleteNotesByUser(id: number) {
+    return await this.notesService.deleteAllUserNotes(id);
+  }
 }

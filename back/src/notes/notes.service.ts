@@ -37,6 +37,15 @@ export class NotesService {
     });
   }
 
+  async deleteAllUserNotes(userId: number) {
+    const userNotes: Note[] = await this.getNotesByUser(userId);
+    const notesIds: number[] = userNotes.map((note: Note) => note.id);
+
+    for (let i = 0; i < notesIds.length; i++) {
+      await this.deleteNote(notesIds[i], userId);
+    }
+  }
+
   async getSingleNote(id: number) {
     return await this.noteRepository.findOne({
       where: { id },
