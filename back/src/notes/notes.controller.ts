@@ -58,12 +58,14 @@ export class NotesController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Patch('/:id')
+  @UseInterceptors(FileInterceptor('image'))
   updateNote(
     @Param() params,
     @Req() request: Request,
     @Body() dto: UpdateNoteDto,
+    @UploadedFile() image: Express.Multer.File,
   ) {
-    return this.notesService.updateNote(params.id, request.user.id, dto);
+    return this.notesService.updateNote(params.id, request.user.id, dto, image);
   }
 
   @ApiOperation({ summary: 'Delete note' })

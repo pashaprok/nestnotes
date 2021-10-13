@@ -29,4 +29,27 @@ export class FilesService {
       );
     }
   }
+
+  async deleteFile(filename): Promise<string> {
+    try {
+      const filePath: string = path.resolve(
+        __dirname,
+        '..',
+        'static',
+        'images',
+        'notes',
+      );
+      if (!fs.existsSync(path.join(filePath, filename))) {
+        return 'File is not exist';
+      }
+
+      fs.unlinkSync(path.join(filePath, filename));
+      return filename;
+    } catch (e) {
+      throw new HttpException(
+        'There was an error deleting the image',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
 }

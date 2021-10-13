@@ -48,16 +48,34 @@ export class NotesService {
   //   });
   // }
 
-  async updateNote(noteId: number, currentUserId: number, dto: UpdateNoteDto) {
+  async updateNote(
+    noteId: number,
+    currentUserId: number,
+    dto: UpdateNoteDto,
+    image: Express.Multer.File,
+  ) {
     const note = await this.getSingleNote(noteId);
     if (!note) {
       throw new HttpException('This note is not exist!', HttpStatus.NOT_FOUND);
     }
 
     isAuthor(note.userId, currentUserId, ACTIONS.UPDATE, 'note');
+    imageFileFilter(image.originalname);
+    const newFileName: string = await this.fileService.createFile(image);
+
+    const deletingOldImage: string = await this.fileService.deleteFile(
+      note.image,
+    );
+
+    if (note.image !== deletingOldImage) {
+      throw new HttpException(
+        deletingOldImage,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
 
     await this.noteRepository.update(
-      { ...dto, updatedAt: new Date() },
+      { ...dto, image: newFileName, updatedAt: new Date() },
       { where: { id: noteId } },
     );
 
@@ -70,6 +88,17 @@ export class NotesService {
       throw new HttpException('This note is not exist!', HttpStatus.NOT_FOUND);
 
     isAuthor(note.userId, currentUserId, ACTIONS.DELETE, 'note');
+
+    const deletingNoteImage: string = await this.fileService.deleteFile(
+      note.image,
+    );
+
+    if (note.image !== deletingNoteImage) {
+      throw new HttpException(
+        deletingNoteImage,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
 
     return await this.noteRepository.destroy({
       where: { id: noteId },
