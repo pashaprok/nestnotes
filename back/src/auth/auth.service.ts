@@ -2,6 +2,7 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { User } from '../users/users.model';
@@ -18,10 +19,12 @@ export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    private logger: Logger,
   ) {}
 
   async login(userDto: LoginUserDto) {
     const user = await this.validateUser(userDto);
+    this.logger.log(`User ${user.email} is logged in!`);
     return this.generateToken(user);
   }
 
@@ -43,6 +46,7 @@ export class AuthService {
     });
 
     await new Email(user).sendWelcome();
+    this.logger.log(`User ${user.email} is registered!`);
 
     return this.generateToken(user);
   }
