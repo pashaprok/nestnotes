@@ -6,6 +6,7 @@ import { User } from './users.model';
 import { AuthModule } from '../auth/auth.module';
 import { Note } from '../notes/notes.model';
 import { NotesModule } from '../notes/notes.module';
+import { RedisCacheModule } from '../redis-cache/redis-cache.module';
 
 @Module({
   providers: [UsersService],
@@ -14,6 +15,7 @@ import { NotesModule } from '../notes/notes.module';
     SequelizeModule.forFeature([User, Note]),
     forwardRef(() => AuthModule),
     NotesModule,
+    RedisCacheModule,
   ],
   exports: [UsersService],
 })

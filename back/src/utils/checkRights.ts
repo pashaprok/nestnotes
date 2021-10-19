@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { ForbiddenException } from '@nestjs/common';
 
 export function isAuthor(
   realAuthorId: number,
@@ -7,8 +7,5 @@ export function isAuthor(
   subject: string,
 ): void {
   if (realAuthorId !== currentUserId)
-    throw new HttpException(
-      `Only author can ${action} ${subject}!`,
-      HttpStatus.FORBIDDEN,
-    );
+    throw new ForbiddenException(`Only author can ${action} ${subject}!`);
 }
