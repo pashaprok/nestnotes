@@ -10,6 +10,7 @@ import { NotesModule } from './notes/notes.module';
 import { Note } from './notes/notes.model';
 import { postgresConfig } from './config/postgres';
 import { FilesModule } from './files/files.module';
+import { RedisCacheModule } from './redis-cache/redis-cache.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { FilesModule } from './files/files.module';
     AuthModule,
     NotesModule,
     FilesModule,
+    RedisCacheModule,
   ],
   controllers: [AppController],
   providers: [AppService, Logger],
