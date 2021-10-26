@@ -2,7 +2,7 @@ import { config } from 'dotenv';
 config({ path: `.${process.env.NODE_ENV}.env` });
 
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { AppModule } from './modules/app/app.module';
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import { INestApplication } from '@nestjs/common';
 import { ValidationPipe } from './pipes/validation.pipe';
