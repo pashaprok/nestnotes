@@ -7,7 +7,7 @@ import {
   Matches,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { strongPasswordRegExp } from '../../constants/regex/password';
+import { strongPasswordRegExp } from '../../../constants/regex';
 
 export class CreateUserDto {
   @ApiProperty({ example: 'user@mail.io', description: 'user email' })

@@ -24,11 +24,11 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Note } from './notes.model';
 import { UpdateNoteDto } from './dto/update-note-dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { imageFileFilter } from '../utils/imageFilter';
+import { imageFileFilter } from '../../utils/imageFilter';
 import { diskStorage } from 'multer';
-import { editFileName } from '../utils/editFilename';
+import { editFileName } from '../../utils/editFilename';
 import * as path from 'path';
-import { fileSize } from '../constants/fileSize';
+import { fileSize } from '../../constants/fileSize';
 
 @ApiTags('Notes')
 @Controller('notes')

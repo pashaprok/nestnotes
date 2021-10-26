@@ -3,8 +3,8 @@ import { CreateNoteDto } from './dto/create-note-dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Note } from './notes.model';
 import { UpdateNoteDto } from './dto/update-note-dto';
-import { isAuthor } from '../utils/checkRights';
-import { ACTIONS } from '../constants/actions';
+import { isAuthor } from '../../utils/checkRights';
+import { ACTIONS } from '../../constants/actions';
 import { FilesService } from '../files/files.service';
 import * as path from 'path';
 

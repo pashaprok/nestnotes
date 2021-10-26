@@ -1,7 +1,7 @@
 import { createTransport, Transporter } from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
-import { User } from '../users/users.model';
+import { User } from '../modules/users/users.model';
 import { mailConfig } from '../config/mail';
 
 export class Email {

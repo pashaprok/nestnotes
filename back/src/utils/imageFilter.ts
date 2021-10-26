@@ -1,4 +1,4 @@
-import { ImageExtensions } from '../constants/regex/imageExtensions';
+import { ImageExtensions } from '../constants/regex';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import * as path from 'path';
 

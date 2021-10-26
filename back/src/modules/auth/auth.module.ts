@@ -4,7 +4,7 @@ import { AuthController } from './auth.controller';
 import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { NotesModule } from '../notes/notes.module';
-import { authConfig } from '../config/auth';
+import { authConfig } from '../../config/auth';
 
 @Module({
   providers: [AuthService, Logger],

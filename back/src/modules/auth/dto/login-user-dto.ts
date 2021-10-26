@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, Length, Matches } from 'class-validator';
-import { strongPasswordRegExp } from '../../constants/regex/password';
+import { strongPasswordRegExp } from '../../../constants/regex';
 
 export class LoginUserDto {
   @ApiProperty({ example: 'user@mail.io', description: 'user email' })

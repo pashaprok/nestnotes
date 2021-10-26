@@ -42,8 +42,7 @@ async function start() {
 
   app.useGlobalPipes(new ValidationPipe());
 
-  await app.listen(appConfig.PORT, () =>
-    console.log(`App started on port: ${appConfig.PORT}`),
-  );
+  await app.listen(appConfig.PORT);
+  console.log(`App started on ${await app.getUrl()}`);
 }
 start();
